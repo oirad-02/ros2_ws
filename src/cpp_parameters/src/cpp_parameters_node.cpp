@@ -12,7 +12,10 @@ public:
   MinimalParam()
   : Node("minimal_param_node")
   {
-    this->declare_parameter("my_parameter", "world");
+    auto param_desc = rcl_interfaces::msg::ParameterDescriptor{};
+    param_desc.description = "This parameter is mine!";
+
+    this->declare_parameter("my_parameter", "world", param_desc);
 
     auto timer_callback = [this](){
       std::string my_param = this->get_parameter("my_parameter").as_string();
@@ -23,8 +26,8 @@ public:
       this->set_parameters(all_new_parameters);
     };
     timer_ = this->create_wall_timer(1000ms, timer_callback);
-  }
 
+  }
 private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
